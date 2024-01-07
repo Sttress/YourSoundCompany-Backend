@@ -9,6 +9,9 @@ using SystemStock.RelationalData.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace SystemStock.Business.Service.Authentication
 {
@@ -17,11 +20,14 @@ namespace SystemStock.Business.Service.Authentication
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly  HttpContext _context;
+
         public AuthenticationService
             (
                 IUserRepository userRepository,
                 IMapper mapper,
-                IConfiguration configuration
+                IConfiguration configuration,
+                HttpContext context
             ) 
         { 
             _userRepository = userRepository;
@@ -55,6 +61,7 @@ namespace SystemStock.Business.Service.Authentication
                 var token = GenerateToken(user);
 
                 result.Data = new UserLoginResponseModel() { Token = token, user = _mapper.Map<UserResponseModel>(user) };
+                _context.Session.SetString("sessionUser", JsonConvert.SerializeObject(user));
 
 
                 return result;
