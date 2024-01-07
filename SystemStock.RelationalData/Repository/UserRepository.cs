@@ -13,7 +13,7 @@ namespace SystemStock.RelationalData.Repository
         {
             _contextDB = contextDb;
         }
-        public async Task<UserEntity?> GetUserById(long Id)
+        public async Task<UserEntity?> GetUserById(long? Id)
         {
             return await _contextDB.User.FindAsync(Id);
         }

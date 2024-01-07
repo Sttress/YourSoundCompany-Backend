@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemStock.Business", "Sys
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemStock.RelationalData", "SystemStock.RelationalData\SystemStock.RelationalData.csproj", "{00796768-6E26-47F6-B861-BD7A965EF2D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemStock.SesseionService", "SystemStock.SesseionService\SystemStock.SesseionService.csproj", "{7497B571-981C-4809-8530-AF04AEA4C721}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{00796768-6E26-47F6-B861-BD7A965EF2D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00796768-6E26-47F6-B861-BD7A965EF2D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00796768-6E26-47F6-B861-BD7A965EF2D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7497B571-981C-4809-8530-AF04AEA4C721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7497B571-981C-4809-8530-AF04AEA4C721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7497B571-981C-4809-8530-AF04AEA4C721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7497B571-981C-4809-8530-AF04AEA4C721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 		{3D135C44-8FA2-41CB-9E2D-9B317F59B614} = {490DFCC2-118A-47E0-894E-8AA6FB489F4E}
 		{DBCC9512-1FF6-40CB-A079-D21B6F1A4054} = {8E9B71D0-D493-4D8A-A996-9B6345B6472D}
 		{00796768-6E26-47F6-B861-BD7A965EF2D7} = {A4A8CCC3-839C-4910-9E11-7C193418CD28}
+		{7497B571-981C-4809-8530-AF04AEA4C721} = {A4A8CCC3-839C-4910-9E11-7C193418CD28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {909C411B-28BC-4EE9-B044-678F41BDB9A5}

@@ -22,10 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SystemStock.Business\SystemStock.Business.csproj" />
     <ProjectReference Include="..\SystemStock.RelationalData\SystemStock.RelationalData.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Filter\" />
+    <ProjectReference Include="..\SystemStock.SesseionService\SystemStock.SesseionService.csproj" />
   </ItemGroup>
 
 </Project>

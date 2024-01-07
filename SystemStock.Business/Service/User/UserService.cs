@@ -6,6 +6,7 @@ using SystemStock.Business.Model.User;
 using SystemStock.Business.Validation.User;
 using SystemStock.RelationalData;
 using SystemStock.RelationalData.Entities;
+using SystemStock.SesseionService;
 using C = BCrypt.Net;
 
 
@@ -17,19 +18,22 @@ namespace SystemStock.Business.Service.User
         private readonly IMapper _mapper;
         private readonly UserCreateValidator _userCreateValidator;
         private readonly UserUpdateValidator _userUpdateValidator;
+        private readonly ISessionService _sessionService;
 
         public UserService
             (
                 IUserRepository userRepositry, 
                 IMapper mapper, 
                 UserUpdateValidator userUpdateValidator,
-                UserCreateValidator userCreateValidator
+                UserCreateValidator userCreateValidator,
+                ISessionService sessionService
             )
         {
             _userRepository = userRepositry;
             _mapper = mapper;
             _userUpdateValidator = userUpdateValidator;
             _userCreateValidator = userCreateValidator;
+            _sessionService = sessionService;
         }
 
         public async Task<BaseResponse<UserResponseModel>> CreateUpdate(UserCreateModel model)
@@ -87,7 +91,25 @@ namespace SystemStock.Business.Service.User
             }
         }
 
-        public async Task<BaseResponse<UserResponseModel>> GetById(long id)
+        public async Task<UserResponseModel?> GetCurrentUser()
+        {
+            try
+            {
+                var userId = _sessionService.UserId;
+
+                if(userId is not null)
+                {
+                    return _mapper.Map<UserResponseModel>(await GetById(userId));
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<BaseResponse<UserResponseModel>> GetById(long? id)
         {
             try
             {

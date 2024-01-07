@@ -11,6 +11,8 @@ using SystemStock.Business.Validation.User;
 using SystemStock.Business.Validation.Store;
 using SystemStock.Business.Validation.Category;
 using SystemStock.Business.Service.Category;
+using SystemStock.SesseionService;
+using SystemStock.SesseionService.Service;
 
 namespace SystemStock.Api
 {
@@ -30,6 +32,7 @@ namespace SystemStock.Api
             services.AddScoped<IStoreService, StoreService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<ISessionService, SessionService>();
 
             return services;
         }

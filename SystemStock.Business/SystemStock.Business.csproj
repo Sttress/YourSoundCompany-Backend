@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SystemStock.RelationalData\SystemStock.RelationalData.csproj" />
+    <ProjectReference Include="..\SystemStock.SesseionService\SystemStock.SesseionService.csproj" />
   </ItemGroup>
 
 </Project>

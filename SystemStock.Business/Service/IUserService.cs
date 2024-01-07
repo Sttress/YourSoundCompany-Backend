@@ -11,7 +11,8 @@ namespace SystemStock.Business.Service
     public interface IUserService
     {
         Task<BaseResponse<UserResponseModel>> CreateUpdate(UserCreateModel model);
-        Task<BaseResponse<UserResponseModel>> GetById(long id);
+        Task<BaseResponse<UserResponseModel>> GetById(long? id);
         Task<bool> VerifyUserById(long id);
+        Task<UserResponseModel?> GetCurrentUser();
     }
 }

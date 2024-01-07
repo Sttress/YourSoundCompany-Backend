@@ -10,6 +10,7 @@ using SystemStock.Business.Model.Category;
 using SystemStock.Business.Validation.Category;
 using SystemStock.RelationalData;
 using SystemStock.RelationalData.Entities;
+using SystemStock.SesseionService;
 
 namespace SystemStock.Business.Service.Category
 {
@@ -18,20 +19,20 @@ namespace SystemStock.Business.Service.Category
         private readonly ICategoryRepository _categoryRepository;
         private readonly CategoryCreateValidator _categoryCreateValidator;
         private readonly IMapper _mapper;
-        private readonly HttpContext _context;
+        private readonly IUserService _userService;
 
         public CategoryService
             (
                 ICategoryRepository categoryRepository,
                 CategoryCreateValidator categoryCreateValidator,
                 IMapper mapper,
-                HttpContext context
+                IUserService userService
             ) 
         {
             _categoryRepository = categoryRepository;
             _categoryCreateValidator = categoryCreateValidator;
             _mapper = mapper;
-            _context = context;
+            _userService = userService;
         }
 
         public async Task<BaseResponse<CategoryModel>> Create(CategoryModel model)
@@ -40,15 +41,24 @@ namespace SystemStock.Business.Service.Category
             {
                 var result = new BaseResponse<CategoryModel>();
                 result.Message = result.Validate(await _categoryCreateValidator.ValidateAsync(model));
+
+                var user = await _userService.GetCurrentUser();
+
+                if(user is null)
+                {
+                    result.Message.Add("Usuário Inválido");
+                    return result;
+                }
+
                 if (result.Message.Count() > 0)
                 {
                     return result;
                 }
-                var user = _context.Session.GetString("sessionUser");
                 var entity = new CategoryEntity()
                 {
                     Name = model.Name,
                     Active = true,
+                    UserId = user.Id
                 };
 
                 entity = (await _categoryRepository.GetDbSetCategory().AddAsync(entity)).Entity;
