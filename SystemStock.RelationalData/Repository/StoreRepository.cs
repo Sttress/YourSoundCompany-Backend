@@ -36,12 +36,12 @@ namespace SystemStock.RelationalData.Repository
                                               .ToListAsync();
         }
 
-        public async Task<StoreEntity>? GetById(long Id)
+        public async Task<StoreEntity?> GetById(long Id)
         {
             return await _contextDb.Store.Where(e => e.Id == Id).FirstOrDefaultAsync();
         }
 
-        public async Task<StoreEntity>? GetByName(string name)
+        public async Task<StoreEntity?> GetByName(string name)
         {
             return await _contextDb.Store.Where(e => e.Name == name).FirstOrDefaultAsync();
         }

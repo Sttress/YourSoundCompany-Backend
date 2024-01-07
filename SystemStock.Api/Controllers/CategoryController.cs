@@ -20,7 +20,7 @@ namespace SystemStock.Api.Controllers
             return await _categoryService.Create(model);
         }
 
-        [HttpPost("Active")]
+        [HttpPut("Active")]
         public async Task Active([FromQuery]long Id)
         {
             await _categoryService.Active(Id);

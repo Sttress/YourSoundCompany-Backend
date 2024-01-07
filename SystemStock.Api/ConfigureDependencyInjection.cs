@@ -13,6 +13,8 @@ using SystemStock.Business.Validation.Category;
 using SystemStock.Business.Service.Category;
 using SystemStock.SesseionService;
 using SystemStock.SesseionService.Service;
+using SystemStock.Business.Service.Product;
+using SystemStock.Business.Validation.Product;
 
 namespace SystemStock.Api
 {
@@ -33,6 +35,7 @@ namespace SystemStock.Api
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<IProductService, ProductService>();
 
             return services;
         }
@@ -43,6 +46,7 @@ namespace SystemStock.Api
             services.AddTransient<UserUpdateValidator>();
             services.AddTransient<StoreCreateValidator>();
             services.AddTransient<CategoryCreateValidator>();
+            services.AddTransient<ProductCreateValidator>();
 
             return services;
         }
@@ -60,6 +64,7 @@ namespace SystemStock.Api
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository,ProductRepository>();
 
             return services;
         }
