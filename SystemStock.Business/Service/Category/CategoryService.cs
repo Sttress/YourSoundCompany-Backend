@@ -74,5 +74,43 @@ namespace SystemStock.Business.Service.Category
             }
         }
 
+        public async Task Active(long categoryId)
+        {
+            try
+            {
+                var userId = (await _userService.GetCurrentUser()).Id;
+
+                var category = await _categoryRepository.GetById(categoryId,userId);
+
+                if(category is not null)
+                {
+                    category.Active = false;
+                    await _categoryRepository.SaveChanges();
+                }
+                
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<BaseResponse<List<CategoryModel>>> GetList()
+        {
+            try
+            {
+                var result = new BaseResponse<List<CategoryModel>>();
+
+                var userId = (await _userService.GetCurrentUser()).Id;
+
+                var listCategoryByUser = await _categoryRepository.GetList(userId);
+
+                result.Data = _mapper.Map<List<CategoryModel>>(listCategoryByUser);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -23,13 +23,13 @@ namespace SystemStock.Api.Controllers
         [HttpPost("Active")]
         public async Task Active([FromQuery]long Id)
         {
-
+            await _categoryService.Active(Id);
         }
 
         [HttpGet("List")]
-        public async Task List()
+        public async Task<BaseResponse<List<CategoryModel>>> List()
         {
-
+            return await _categoryService.GetList();
         }
     }
 }

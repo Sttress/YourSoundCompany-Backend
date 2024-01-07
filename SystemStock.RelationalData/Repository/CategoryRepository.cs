@@ -23,14 +23,19 @@ namespace SystemStock.RelationalData.Repository
             return _contextDb.Category;
         }
 
-        public async Task<List<CategoryEntity>> GetList()
+        public async Task<List<CategoryEntity>> GetList(long UserId)
         {
-            return await _contextDb.Category.OrderByDescending(e => e.Name).ToListAsync();
+            return await _contextDb.Category.Where(e => e.UserId == UserId).OrderByDescending(e => e.Name).ToListAsync();
         }
 
-        public async Task<CategoryEntity>? GetByName(string Name)
+        public async Task<CategoryEntity>? GetByName(string Name, long UserId)
         {
-            return await _contextDb.Category.Where(e => e.Name == Name).FirstOrDefaultAsync();
+            return await _contextDb.Category.Where(e => e.Name == Name && e.UserId == UserId).FirstOrDefaultAsync();
+        }
+
+        public async Task<CategoryEntity>? GetById(long CategoryId, long UserId)
+        {
+            return await _contextDb.Category.Where(e => e.Id == CategoryId && e.UserId == UserId).FirstOrDefaultAsync();
         }
     }
 }

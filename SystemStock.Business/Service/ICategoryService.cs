@@ -11,5 +11,7 @@ namespace SystemStock.Business.Service
     public interface ICategoryService
     {
         Task<BaseResponse<CategoryModel>> Create(CategoryModel model);
+        Task Active(long categoryId);
+        Task<BaseResponse<List<CategoryModel>>> GetList();
     }
 }

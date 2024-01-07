@@ -97,9 +97,10 @@ namespace SystemStock.Business.Service.User
             {
                 var userId = _sessionService.UserId;
 
-                if(userId is not null)
+                if(userId > 0)
                 {
-                    return _mapper.Map<UserResponseModel>(await GetById(userId));
+                    var user = (await GetById(userId)).Data;
+                    return _mapper.Map<UserResponseModel>(user);
                 }
                 return null;
             }
