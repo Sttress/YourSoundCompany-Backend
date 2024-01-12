@@ -10,6 +10,7 @@ namespace SystemStock.RelationalData
         public DbSet<StoreEntity> Store { get; set; }
         public DbSet<CategoryEntity> Category { get; set; }
         public DbSet<ProductEntity> Product { get; set; }
+        public DbSet<StoreProductEntity> StoreProduct { get; set; }
 
     }
 }

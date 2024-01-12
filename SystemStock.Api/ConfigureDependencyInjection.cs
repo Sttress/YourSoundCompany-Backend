@@ -36,6 +36,7 @@ namespace SystemStock.Api
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IStoreProductRepository, StoreProductRepository>();
 
             return services;
         }
@@ -65,6 +66,7 @@ namespace SystemStock.Api
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository,ProductRepository>();
+            services.AddScoped<IStoreProductRepository, StoreProductRepository>();
 
             return services;
         }
