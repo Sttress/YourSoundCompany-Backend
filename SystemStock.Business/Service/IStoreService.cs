@@ -9,6 +9,6 @@ namespace SystemStock.Business.Service
     public interface IStoreService
     {
         Task<BaseResponse<List<StoreModel>>> CreateUpdate(StoreModel model);
-        Task<BaseResponse<IPagedList<StoreModel>>> GetByUser(long Id);
+        Task<BaseResponse<IPagedList<StoreModel>>> GetList();
     }
 }

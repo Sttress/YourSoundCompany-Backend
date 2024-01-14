@@ -15,5 +15,6 @@ namespace SystemStock.RelationalData
         Task<List<StoreEntity>> GetByUser(long Id);
         DbSet<StoreEntity> GetDbSetStore();
         Task SaveChanges();
+        Task<List<StoreEntity>> GetList(long UserId);
     }
 }

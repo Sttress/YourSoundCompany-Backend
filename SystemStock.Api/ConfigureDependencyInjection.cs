@@ -15,6 +15,7 @@ using SystemStock.SesseionService;
 using SystemStock.SesseionService.Service;
 using SystemStock.Business.Service.Product;
 using SystemStock.Business.Validation.Product;
+using SystemStock.Business.Service.StoreProduct;
 
 namespace SystemStock.Api
 {
@@ -36,7 +37,7 @@ namespace SystemStock.Api
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IStoreProductRepository, StoreProductRepository>();
+            services.AddScoped<IStoreProductService, StoreProductService>();
 
             return services;
         }

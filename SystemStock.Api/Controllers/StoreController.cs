@@ -27,21 +27,22 @@ namespace SystemStock.Api.Controllers
         }
 
         [HttpGet("GetByUser")]
-        public async Task<BaseResponse<IPagedList<StoreModel>>> GetByUser([FromQuery] long Id)
+        public async Task<BaseResponse<IPagedList<StoreModel>>> GetByUser()
         {
-            return await _storeService.GetByUser(Id);
+            return await _storeService.GetList();
         }
 
-        //[HttpPost("SaveProductListForStore")] 
-        //public async Task<BaseResponse<StoreProductRequestModel>> SaveProductListForStore([FromBody] StoreProductRequestModel model)
-        //{
-        //    return await 
-        //}
+        [HttpPost("SaveProductListForStore")]
+        public async Task<BaseResponse<List<StoreProductModel>>> SaveProductListForStore([FromBody] StoreProductRequestModel model)
+        {
+            return await _storeProductService.SaveProductListForStore(model);
+        }
 
         [HttpGet("GetByStore")]
         public async Task<IPagedList<StoreProductModel>> GetProductsByStore([FromQuery] long StoreId ) 
         {
             return await _storeProductService.GetByStore(StoreId);
         }
+
     }
 }

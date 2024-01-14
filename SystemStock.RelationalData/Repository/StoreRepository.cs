@@ -46,5 +46,9 @@ namespace SystemStock.RelationalData.Repository
             return await _contextDb.Store.Where(e => e.Name == name).FirstOrDefaultAsync();
         }
 
+        public async Task<List<StoreEntity>> GetList(long UserId)
+        {
+            return await _contextDb.Store.Where(e => e.UserId == UserId).ToListAsync();
+        }
     }
 }

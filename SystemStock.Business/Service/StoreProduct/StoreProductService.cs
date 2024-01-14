@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SystemStock.Business.Model;
+using SystemStock.Business.Model.Store;
 using SystemStock.Business.Model.StoreProduct;
 using SystemStock.RelationalData;
 using SystemStock.RelationalData.Entities;
@@ -41,77 +42,88 @@ namespace SystemStock.Business.Service.StoreProduct
             }
         }
 
-        //public async Task SaveProductListForStore(StoreProductRequestModel model) 
-        //{
-        //    try
-        //    {
-        //        var result = new BaseResponse<StoreProductRequestModel>();
+        public async Task<BaseResponse<List<StoreProductModel>>> SaveProductListForStore(StoreProductRequestModel model)
+        {
+            try
+            {
+                var result = new BaseResponse<List<StoreProductModel>>();
 
-        //        if(model.StoreId <= 0)
-        //        {
-        //            result.Message.Add("Store inválida");
-        //        }
+                if (model.StoreId <= 0)
+                {
+                    result.Message.Add("Store inválida");
+                }
 
-        //        var storeProductList = await _storeProductRepository.GetByStore(model.StoreId);
-        //        var productDeleted = new List<StoreProductEntity>();
-        //        var productAdd = new List<StoreProductEntity>();
-
-        //        if (!model.Products.Any() && storeProductList.Any())
-        //        {
-        //            productDeleted.AddRange(storeProductList.ToList());
-        //        }
-        //        else
-        //        {
-        //            var storeProductListGroup = storeProductList.GroupBy(e => e.ProductId);
-        //            foreach (var item in storeProductListGroup)
-        //            {
-        //                if (!model.Products.Any(e => e.ProductId == item.Key))
-        //                {
-        //                    productDeleted.Add(item.);
-        //                }
-        //            }
-        //        }
-
-        //        if (!storeProductList.Any() && model.Products.Any())
-        //        {
-        //            foreach (var item in model.Products)
-        //            {
-        //                productAdd.Add(new StoreProductEntity()
-        //                {
-        //                    Amount = item.Amount,
-        //                    ProductId = item.ProductId,
-        //                    StoreId = model.StoreId
-        //                });
-        //            }
-        //        }
-        //        else
-        //        {
-        //            foreach (var item in model.Products)
-        //            {
-        //                if(storeProductList.Any(e => e.Key == item.ProductId))
-        //                {
-
-        //                    productAdd.Add(new StoreProductEntity()
-        //                    {
-        //                        Amount = item.Amount,
-        //                        ProductId = item.ProductId,
-        //                        StoreId = model.StoreId
-        //                    });
-        //                }
-
-        //            }
-        //        }
-
-        //        Delete(productDeleted)
+                var storeProductList = await _storeProductRepository.GetByStore(model.StoreId);
+                var productDeleted = new List<StoreProductEntity>();
+                var productAdd = new List<StoreProductEntity>();
 
 
+                if(!storeProductList.Any() && model.Products.Any())
+                {
+                    foreach(var item in model.Products.ToList())
+                    {
+                        productAdd.Add(new StoreProductEntity()
+                        {
+                            ProductId = item.ProductId,
+                            StoreId = model.StoreId,
+                            Amount = item.Amount,
+                        });
 
-        //    }
-        //    catch(Exception ex)
-        //    {
-        //        throw new Exception(ex.Message);
-        //    }
-        //}
+                    }
+                }
+
+                if(model.Products.Any() && storeProductList.Any())
+                {
+                    productDeleted.AddRange(storeProductList.ToList());
+                }
+
+                if(model.Products.Any() && storeProductList.Any())
+                {
+
+                    foreach(var item in storeProductList.ToList())
+                    {
+                        var productModel = model.Products.Where(e => e.ProductId == item.ProductId).FirstOrDefault();
+
+                        if (productModel is not null)
+                        {
+
+                            item.Amount = productModel.Amount;
+                        }
+                        else
+                        {
+                            productDeleted.Add(item);
+                        }
+
+                    }
+
+                    foreach(var item in model.Products.ToList())
+                    {
+                        if(storeProductList.Where(e => e.ProductId == item.ProductId).Count() > 0)
+                        {
+                            productAdd.Add(new StoreProductEntity()
+                            {
+                                ProductId = item.ProductId,
+                                StoreId = model.StoreId,
+                                Amount = item.Amount,
+                            });
+                        }
+                    }
+                }
+
+
+                await Delete(productDeleted);
+                await _storeProductRepository.GetDbSetStoreProduct().AddRangeAsync(productAdd);
+
+                await _storeProductRepository.SaveChanges();
+
+                result.Data = _mapper.Map<List<StoreProductModel>>(await _storeProductRepository.GetByStore(model.StoreId));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         private async Task Delete(List<StoreProductEntity> list)
         {
@@ -127,6 +139,5 @@ namespace SystemStock.Business.Service.StoreProduct
                 throw new Exception(ex.Message);
             }
         }
-
     }
 }
