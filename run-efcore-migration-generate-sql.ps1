@@ -1,5 +1,5 @@
-$project = "./SystemStock.RelationalData\SystemStock.RelationalData.csproj"
-$startup_project = "./SystemStock.Api\SystemStock.Api.csproj"
+$project = "./YourSoundCompany.RelationalData\YourSoundCompany.RelationalData.csproj"
+$startup_project = "./YourSoundCompany.Api\YourSoundCompany.Api.csproj"
 
 
 Write-Host "****************************"
