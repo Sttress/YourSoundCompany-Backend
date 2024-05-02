@@ -4,6 +4,7 @@ using Microsoft.VisualBasic;
 using YourSoundCompnay.Business.Model;
 using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business;
+using YourSoundCompany.Business.Model.User;
 
 namespace YourSoundCompnay.Api.Controllers
 {
@@ -29,5 +30,10 @@ namespace YourSoundCompnay.Api.Controllers
             return await _userService.GetById(id);
         }
 
+        [HttpPost("VerifyEmailCode")]
+        public async Task<BaseResponse<UserResponseModel>> VerifyEmailCode([FromBody] UserVerificationEmail model)
+        {
+            return await _userService.VerifyEmailCode(model);
+        }
     }
 }

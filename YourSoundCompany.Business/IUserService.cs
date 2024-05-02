@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business.Model;
+using YourSoundCompany.Business.Model.User;
 
 namespace YourSoundCompnay.Business
 {
@@ -14,5 +15,6 @@ namespace YourSoundCompnay.Business
         Task<BaseResponse<UserResponseModel>> GetById(long? id);
         Task<bool> VerifyUserById(long id);
         Task<UserResponseModel?> GetCurrentUser();
+        Task<BaseResponse<UserResponseModel>> VerifyEmailCode(UserVerificationEmail model);
     }
 }

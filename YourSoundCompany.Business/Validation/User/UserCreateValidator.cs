@@ -35,7 +35,7 @@ namespace YourSoundCompnay.Business.Validation.User
 
 
             var user = await _userRepository.GetUserByEmail(email);
-            if (user != null)
+            if (user.Any())
             {
                 return false;
             }

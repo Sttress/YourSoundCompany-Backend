@@ -10,6 +10,11 @@ using YourSoundCompnay.Business.Service;
 using YourSoundCompnay.Business;
 using YourSoundCompany.Business;
 using YourSoundCompany.Business.Service;
+using YourSoundCompany.EmailService;
+using YourSoundCompany.EmailService.Service;
+using YourSoundCompany.Templates;
+using YourSoundCompany.Templates.Service;
+using YourSoundCompany.CacheService.Service;
 
 namespace YourSoundCompnay.Api
 {
@@ -18,7 +23,6 @@ namespace YourSoundCompnay.Api
         public static void ConfigureDI(this IServiceCollection services, IConfiguration configuration) =>
         services.ConfigureService(configuration)
             .ConfigureRepository(configuration)
-            //.ConfigureIntegrationSpotify()
             .ConfigureValidation();
 
 
@@ -32,17 +36,17 @@ namespace YourSoundCompnay.Api
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISpotifyService, SpotifyService>();
+            services.AddScoped<ITemplateEmailService, TemplateEmailService>();
+
+            services.AddTransient<IEmailService, EmailService>();
+
+            services.AddSingleton<ICacheService, CacheService>();
+
 
             return services;
         }
 
-        //private static IServiceCollection ConfigureIntegrationSpotify(this IServiceCollection services)
-        //{
-        //    services.AddHttpClient();
-        //    services.AddScoped<ISpotifyService, SpotifyService>();
-        //    return services;
 
-        //}
 
         private static IServiceCollection ConfigureValidation(this IServiceCollection services)
         {

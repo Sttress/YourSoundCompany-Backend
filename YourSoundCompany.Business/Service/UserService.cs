@@ -1,6 +1,11 @@
 ﻿
 using AutoMapper;
-using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using YourSoundCompany.Business.Model.User;
+using YourSoundCompany.CacheService.Service;
+using YourSoundCompany.EmailService;
+using YourSoundCompany.Templates;
+using YourSoundCompany.Templates.Enum;
 using YourSoundCompnay.Business.Model;
 using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business.Validation.User;
@@ -19,6 +24,9 @@ namespace YourSoundCompnay.Business.Service
         private readonly UserCreateValidator _userCreateValidator;
         private readonly UserUpdateValidator _userUpdateValidator;
         private readonly ISessionService _sessionService;
+        private readonly IEmailService _emailService;
+        private readonly ITemplateEmailService _templateEmailService;
+        private readonly ICacheService _cacheService;
 
         public UserService
             (
@@ -26,7 +34,10 @@ namespace YourSoundCompnay.Business.Service
                 IMapper mapper,
                 UserUpdateValidator userUpdateValidator,
                 UserCreateValidator userCreateValidator,
-                ISessionService sessionService
+                ISessionService sessionService,
+                IEmailService emailService,
+                ITemplateEmailService templateEmailService,
+                ICacheService cacheService
             )
         {
             _userRepository = userRepositry;
@@ -34,7 +45,13 @@ namespace YourSoundCompnay.Business.Service
             _userUpdateValidator = userUpdateValidator;
             _userCreateValidator = userCreateValidator;
             _sessionService = sessionService;
+            _emailService = emailService;
+            _templateEmailService = templateEmailService;
+            _cacheService = cacheService;
         }
+
+        private string _Key_EmailCode(string email) => $"VerificationCode_{email}";
+
 
         public async Task<BaseResponse<UserResponseModel>> CreateUpdate(UserCreateModel model)
         {
@@ -44,6 +61,7 @@ namespace YourSoundCompnay.Business.Service
                 var validation = new List<string>();
                 var entity = new UserEntity();
 
+
                 if (model.Id > 0)
                 {
                     validation = result.Validate(await _userUpdateValidator.ValidateAsync(model));
@@ -52,6 +70,8 @@ namespace YourSoundCompnay.Business.Service
                 {
                     validation = result.Validate(await _userCreateValidator.ValidateAsync(model));
                 }
+
+
 
                 if (validation.Count() > 0)
                 {
@@ -72,8 +92,12 @@ namespace YourSoundCompnay.Business.Service
                     {
                         Name = model.Name,
                         Email = model.Email,
-                        Password = C.BCrypt.HashPassword(model.Password)
+                        Password = C.BCrypt.HashPassword(model.Password),
+                        Active = false
                     };
+
+                    await SendEmailVerification(model.Email, model.Name);
+
                     entity = (await _userRepository.GetDbSetUser().AddAsync(entity)).Entity;
 
                 }
@@ -89,6 +113,74 @@ namespace YourSoundCompnay.Business.Service
             {
                 throw new Exception(ex.Message);
             }
+        }
+        private async Task<int> CreateRandomCode(string emailUser)
+        {
+            var random = new Random();
+            var code = random.Next(100000, 999999);
+
+            await _cacheService.Set(this._Key_EmailCode(emailUser), code, TimeSpan.FromMinutes(5));
+
+            return code;
+        }
+
+        private async Task SendEmailVerification(string email, string name)
+        {
+            try
+            {
+                var codeVerify = await CreateRandomCode(email);
+
+                object obj = new
+                {
+                    userName = name,
+                    code = codeVerify
+                };
+
+                var body = await _templateEmailService.RenderTemplate(TemplateEmailEnum.VerifyEmail, obj);
+                await _emailService.SendEmailAsync(email, "Código de Verificação", body);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<BaseResponse<UserResponseModel>> VerifyEmailCode(UserVerificationEmail model)
+        {
+            try
+            {
+                var codeCache = await _cacheService.Get<int>(this._Key_EmailCode(model.Email));
+                var result = new BaseResponse<UserResponseModel>();
+                if(model.Code == null)
+                {
+                    result.Message.Add("O código de verificação é obrigatório!");
+                    return result;
+                }
+
+                if(model.Code != codeCache)
+                {
+                    result.Message.Add("O código de verificação fornecido não foi o mesmo enviado por email para a verificação!");
+                    return result;
+                }
+
+                var userDB = (await _userRepository.GetUserByEmail(model.Email)).FirstOrDefault();
+                
+                if(userDB is not null)
+                {
+                    userDB.Active = true;
+                    await _userRepository.SaveChanges();
+                }
+
+                var user = _mapper.Map<UserResponseModel>(userDB);
+                result.Data = user;
+                return result;
+
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
         }
 
         public async Task<UserResponseModel?> GetCurrentUser()
