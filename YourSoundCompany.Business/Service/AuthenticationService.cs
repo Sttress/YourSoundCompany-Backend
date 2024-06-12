@@ -1,42 +1,55 @@
 ﻿using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business.Model;
-using YourSoundCompnay.RelationalData;
 using C = BCrypt.Net;
 using AutoMapper;
 using System.Security.Claims;
 using System.Text;
-using YourSoundCompnay.RelationalData.Entities;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
+using YourSoundCompany.Business.Model.Authentication;
+using System.Security.Cryptography;
+using YourSoundCompany.CacheService.Service;
 
 namespace YourSoundCompnay.Business.Service
 {
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IConfiguration _configuration;
-        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
+        private readonly ICacheService _cacheService;
+
         public AuthenticationService
             (
-                IUserRepository userRepository,
                 IMapper mapper,
-                IConfiguration configuration
+                IConfiguration configuration,
+                IUserService userService,
+                ICacheService cacheService
             )
         {
-            _userRepository = userRepository;
             _mapper = mapper;
             _configuration = configuration;
+            _userService = userService;
+            _cacheService = cacheService;
         }
 
+        private string _Key_RefreshToken(string refreshToken) => $"key_token_{refreshToken}";
 
         public async Task<BaseResponse<UserLoginResponseModel>> Login(UserLoginModel model)
         {
             try
             {
-
                 var result = new BaseResponse<UserLoginResponseModel>();
-                var user = (await _userRepository.GetUserByEmail(model.Email)).FirstOrDefault();
+                result.Message = new List<string>();
+
+                if (string.IsNullOrEmpty(model.Email))
+                {
+                    result.Message.Add("Email é obrigatório para o login!");
+                    return result;
+                }
+
+                var user = await _userService.GetByEmail(model.Email);
 
                 if (user is null)
                 {
@@ -51,9 +64,16 @@ namespace YourSoundCompnay.Business.Service
 
                 }
 
-                var token = GenerateToken(user);
+                if (!user.Active)
+                {
+                    result.Message.Add("Você ainda não ativou a sua conta!");
+                    return result;
+                }
 
-                result.Data = new UserLoginResponseModel() { Token = token, user = _mapper.Map<UserResponseModel>(user) };
+                var userModel = _mapper.Map<UserModel>(user);
+                var auth = await GetAuth(user);
+
+                result.Data = new UserLoginResponseModel() { Token = auth.Token,RefreshToken = auth.RefreshToken ,user = _mapper.Map<UserResponseModel>(user) };
 
 
                 return result;
@@ -64,7 +84,102 @@ namespace YourSoundCompnay.Business.Service
             }
         }
 
-        private string GenerateToken(UserEntity user, IEnumerable<Claim>? claimsUserLogged = null)
+        private async Task<AuthModel> GetAuth(UserModel user)
+        {
+            var result = new AuthModel();
+
+            result.Token = GenerateToken(user);
+            result.RefreshToken = GenereteRefreshToken();
+            await SaveRefreshToken(result.RefreshToken);
+            return result;
+        }
+
+        private string GenereteRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+        private async Task RemoveRefreshTokenInCache(string refreshToken)
+        {
+            await _cacheService.Remove(_Key_RefreshToken(refreshToken));
+        }
+
+        private async Task SaveRefreshToken(string refreshToken)
+        {
+            await _cacheService.Set(_Key_RefreshToken(refreshToken), refreshToken, TimeSpan.FromHours(6));
+        }
+        private ClaimsPrincipal GetPrincipalFromExpiredToken(string Token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTDescriptor:SecretKey"])),
+                ValidateLifetime = false
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var pricipal = tokenHandler.ValidateToken(Token, tokenValidationParameters, out var securityToken);
+            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+               !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                    StringComparison.InvariantCultureIgnoreCase))
+                throw new SecurityTokenException("Invalid Token");
+
+            return pricipal;
+        }
+
+        public async Task<BaseResponse<UserLoginResponseModel>> RefreshToken(AuthModel model)
+        {
+
+            try
+            {
+                var result = new BaseResponse<UserLoginResponseModel>();
+
+                var principal = GetPrincipalFromExpiredToken(model.Token);
+                var saveRefreshToken = await GetRefreshToken(model.RefreshToken);
+                if (saveRefreshToken == null || saveRefreshToken != model.RefreshToken)
+                {
+                    result.Message.Add("RefreshToken invalido!");
+                    return result;
+                }
+
+                if (!long.TryParse(principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.SerialNumber)?.Value, out long tenantId))
+                {
+                    result.Message.Add("RefreshToken invalido!");
+                    return result;
+                }
+
+                var email = principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(email))
+                {
+                    result.Message.Add("RefreshToken invalido!");
+                    return result;
+                }
+
+                var user = await _userService.GetByEmail(email);
+
+                var newJwtToken = GenerateToken(user, principal.Claims);
+                var newRefreshToken = GenereteRefreshToken();
+                await SaveRefreshToken(newRefreshToken);
+
+                result.Data = new UserLoginResponseModel() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseModel>(user) };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        private async Task<string?> GetRefreshToken(string token)
+        {
+            return await _cacheService.Get<string>(_Key_RefreshToken(token));
+        }
+
+        private string GenerateToken(UserModel user, IEnumerable<Claim>? claimsUserLogged = null)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWTDescriptor:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

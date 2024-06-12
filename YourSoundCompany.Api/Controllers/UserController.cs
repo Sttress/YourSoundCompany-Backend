@@ -30,7 +30,15 @@ namespace YourSoundCompnay.Api.Controllers
             return await _userService.GetById(id);
         }
 
+        //[HttpPut("RecoveryPassword")]
+        //[AllowAnonymous]
+        //public async Task<BaseResponse<UserResponseModel>> RecoveryPassword([FromQuery] string? email = "")
+        //{
+        //    return await _userService.RecoveryPassword(email);
+        //}
+
         [HttpPost("VerifyEmailCode")]
+        [AllowAnonymous]
         public async Task<BaseResponse<UserResponseModel>> VerifyEmailCode([FromBody] UserVerificationEmail model)
         {
             return await _userService.VerifyEmailCode(model);

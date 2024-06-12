@@ -10,6 +10,7 @@ namespace YourSoundCompnay.Business.Map
         {
             CreateMap<UserEntity, UserModel>().ReverseMap();
             CreateMap<UserEntity, UserResponseModel > ().ReverseMap();
+            CreateMap<UserModel, UserResponseModel>().ReverseMap();
         }
     }
 }

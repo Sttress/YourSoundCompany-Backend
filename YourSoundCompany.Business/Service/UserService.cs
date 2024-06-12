@@ -226,6 +226,11 @@ namespace YourSoundCompnay.Business.Service
             }
         }
 
+        public async Task<UserModel> GetByEmail(string email)
+        {
+            return _mapper.Map<UserModel>((await _userRepository.GetUserByEmail(email)).FirstOrDefault());
+        }
+
         public async Task<bool> VerifyUserById(long id)
         {
             try

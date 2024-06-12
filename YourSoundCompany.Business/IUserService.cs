@@ -16,5 +16,6 @@ namespace YourSoundCompnay.Business
         Task<bool> VerifyUserById(long id);
         Task<UserResponseModel?> GetCurrentUser();
         Task<BaseResponse<UserResponseModel>> VerifyEmailCode(UserVerificationEmail model);
+        Task<UserModel> GetByEmail(string email);
     }
 }

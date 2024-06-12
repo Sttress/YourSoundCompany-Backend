@@ -9,6 +9,7 @@ namespace YourSoundCompnay.Business.Model.User
     public class UserLoginResponseModel
     {
         public string? Token { get; set; }
+        public string? RefreshToken { get; set; }
         public UserResponseModel? user { get; set; }
 
     }

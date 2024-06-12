@@ -26,8 +26,7 @@ namespace YourSoundCompnay.Business.Validation.User
                                     .Matches(@"[0-9]+")
                                     .Matches(@"[\!\?\*\.\@\#\%]+")
                                     .WithMessage("A Senha invalida!");
-            RuleFor(x => x.PasswordConfirm).NotEmpty().WithMessage("A Senha invalida!")
-                                           .Equal(e => e.Password).WithMessage("A Senhas informadas não coincidem!");
+            RuleFor(x => x.ConfirmPassword).Equal(e => e.Password).WithMessage("A Senhas informadas não coincidem!");
 
         }
         private async Task<bool> VerifyEmailEqual(string? email, CancellationToken ct)

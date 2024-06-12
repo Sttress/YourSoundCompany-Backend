@@ -13,7 +13,6 @@ namespace YourSoundCompnay.Api.Controllers
         }
 
         [HttpGet("GetUrlForCode")]
-        [AllowAnonymous]
         public async Task<string> GetUrlForCode()
         {
             return await _spotifyService.GetCodeUrl();
