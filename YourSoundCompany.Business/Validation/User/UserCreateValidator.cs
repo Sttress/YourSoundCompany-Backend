@@ -31,17 +31,24 @@ namespace YourSoundCompnay.Business.Validation.User
         }
         private async Task<bool> VerifyEmailEqual(string? email, CancellationToken ct)
         {
-
-
-            var user = await _userRepository.GetUserByEmail(email);
-            if (user.Any())
+            if (!string.IsNullOrEmpty(email))
             {
-                return false;
+                var user = await _userRepository.GetUserByEmail(email);
+                if (user.Any(e => e.Active is true))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
             else
             {
-                return true;
+                return false;
             }
+
+
         }
    
     }

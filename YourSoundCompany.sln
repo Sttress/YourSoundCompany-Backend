@@ -15,15 +15,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.SesseionSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.RelationalData", "YourSoundCompany.RelationalData\YourSoundCompany.RelationalData.csproj", "{DCE26DFF-03B2-41CE-A8AC-ED560667003C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.IntegrationSpotify", "YourSoundCompany.IntegrationSpotify\YourSoundCompany.IntegrationSpotify.csproj", "{326F2A43-DBFE-45D3-94BD-FBF82EFE1A96}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.SpotifyService", "YourSoundCompany.IntegrationSpotify\YourSoundCompany.SpotifyService.csproj", "{326F2A43-DBFE-45D3-94BD-FBF82EFE1A96}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.EmailService", "YourSoundCompany.EmailService\YourSoundCompany.EmailService.csproj", "{98DA5475-2133-4935-A4F5-12FAF2A88993}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.Api", "YourSoundCompany.Api\YourSoundCompany.Api.csproj", "{EE956070-6751-43C8-ACCF-54E2EA83B1AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSoundCompany.Templates", "YourSoundCompany.Templates\YourSoundCompany.Templates.csproj", "{DDF200AF-A508-43F4-A5C7-A8DEAA25FA69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.Templates", "YourSoundCompany.Templates\YourSoundCompany.Templates.csproj", "{DDF200AF-A508-43F4-A5C7-A8DEAA25FA69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSoundCompany.CacheService", "YourSoundCompany.CacheService\YourSoundCompany.CacheService.csproj", "{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.CacheService", "YourSoundCompany.CacheService\YourSoundCompany.CacheService.csproj", "{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.Sync", "Sync\YourSoundCompany.Sync.csproj", "{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YourSoundCompany.Worker", "YourSoundCompany.Worker\YourSoundCompany.Worker.csproj", "{D09FFEDB-49DD-4E9C-900C-259A3E71A11D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSoundCompany.DeezerService", "YourSoundCompany.DeezerService\YourSoundCompany.DeezerService.csproj", "{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +69,18 @@ Global
 		{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D09FFEDB-49DD-4E9C-900C-259A3E71A11D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D09FFEDB-49DD-4E9C-900C-259A3E71A11D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D09FFEDB-49DD-4E9C-900C-259A3E71A11D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D09FFEDB-49DD-4E9C-900C-259A3E71A11D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -76,6 +94,9 @@ Global
 		{EE956070-6751-43C8-ACCF-54E2EA83B1AC} = {490DFCC2-118A-47E0-894E-8AA6FB489F4E}
 		{DDF200AF-A508-43F4-A5C7-A8DEAA25FA69} = {8E9B71D0-D493-4D8A-A996-9B6345B6472D}
 		{89BD42AF-196E-47D8-B9A0-CE4AEDAFA109} = {A4A8CCC3-839C-4910-9E11-7C193418CD28}
+		{4AC4AD49-49BD-4EE1-8FFA-F8D7CA88364B} = {8E9B71D0-D493-4D8A-A996-9B6345B6472D}
+		{D09FFEDB-49DD-4E9C-900C-259A3E71A11D} = {490DFCC2-118A-47E0-894E-8AA6FB489F4E}
+		{6ABEEB61-6A94-4FAD-A9D8-C0B7E6E6EB96} = {A4A8CCC3-839C-4910-9E11-7C193418CD28}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {909C411B-28BC-4EE9-B044-678F41BDB9A5}

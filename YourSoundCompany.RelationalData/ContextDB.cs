@@ -8,5 +8,6 @@ namespace YourSoundCompnay.RelationalData
         public ContextDB(DbContextOptions<ContextDB> options) : base(options) { }
         public DbSet<UserEntity> User { get; set; }
 
+
     }
 }

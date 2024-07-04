@@ -9,6 +9,8 @@ namespace YourSoundCompnay.SesseionService
     public interface ISessionService
     {
         long? UserId { get; set; }
+        string SpotifyToken {  get; set; }
+        string SpotifyRefreshToken { get; set; }
 
         void SetSessionData(string key, object data);
 

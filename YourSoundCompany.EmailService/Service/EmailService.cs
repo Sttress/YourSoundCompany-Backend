@@ -28,7 +28,7 @@ namespace YourSoundCompany.EmailService.Service
                 {
                     From = new MailAddress(_configuration["EmailSettings:Email"])
                 };
-                mail.To.Add(new MailAddress("lucaz.exp@hotmail.com"));
+                mail.To.Add(new MailAddress(email));
                 mail.Subject = subject;
                 mail.Body = message;
                 mail.IsBodyHtml = true;

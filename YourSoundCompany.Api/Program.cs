@@ -28,6 +28,7 @@ builder.Services.AddCors(opt =>
     });
 });
 
+
 builder.Services.AddAuthorization();
 
 SwaggerConfiguration.ConfigureSwaggerService(builder.Services);

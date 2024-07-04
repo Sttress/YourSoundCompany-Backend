@@ -1,15 +1,13 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using YourSoundCompany.RelationalData;
 using YourSoundCompnay.RelationalData.Entities;
 
 namespace YourSoundCompnay.RelationalData
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepositoryBase<UserEntity>
     {
-        Task<UserEntity?> GetUserById(long? Id);
-        Task SaveChanges();
-        DbSet<UserEntity> GetDbSetUser();
         Task<List<UserEntity?>> GetUserByEmail(string? email);
-
+        Task<List<UserEntity>> GetUserListInactive();
     }
 }

@@ -15,27 +15,33 @@ using YourSoundCompany.EmailService.Service;
 using YourSoundCompany.Templates;
 using YourSoundCompany.Templates.Service;
 using YourSoundCompany.CacheService.Service;
+using YourSoundCompany.RelationalData;
+using YourSoundCompany.RelationalData.Repository;
+using YourSoundCompany.IntegrationSpotify;
+using YourSoundCompany.IntegrationSpotify.Service;
 
 namespace YourSoundCompnay.Api
 {
     public static class ConfigureDependencyInjection
     {
         public static void ConfigureDI(this IServiceCollection services, IConfiguration configuration) =>
-        services.ConfigureService(configuration)
+        services.ConfigureService()
             .ConfigureRepository(configuration)
             .ConfigureValidation();
 
 
-        private static IServiceCollection ConfigureService(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection ConfigureService(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(UserMap).Assembly);
             services.AddHttpClient();
 
-
+            services.AddScoped<IUtilsService,UtilsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISpotifyService, SpotifyService>();
+            services.AddScoped<ISpotifyCacheService, SpotifyCacheService>();
+            services.AddScoped<ISpotifyAuthService, SpotifyAuthService>();
             services.AddScoped<ITemplateEmailService, TemplateEmailService>();
 
             services.AddTransient<IEmailService, EmailService>();
@@ -66,6 +72,7 @@ namespace YourSoundCompnay.Api
                     .UseNpgsql(connectionString)
             );
 
+            services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }

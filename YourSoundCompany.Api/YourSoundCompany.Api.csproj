@@ -27,7 +27,7 @@
     <ProjectReference Include="..\YourSoundCompany.EmailService\YourSoundCompany.EmailService.csproj" />
     <ProjectReference Include="..\YourSoundCompany.RelationalData\YourSoundCompany.RelationalData.csproj" />
     <ProjectReference Include="..\YourSoundCompany.SesseionService\YourSoundCompany.SesseionService.csproj" />
-	<ProjectReference Include="..\YourSoundCompany.IntegrationSpotify\YourSoundCompany.IntegrationSpotify.csproj"></ProjectReference>
+	<ProjectReference Include="..\YourSoundCompany.IntegrationSpotify\YourSoundCompany.SpotifyService.csproj"></ProjectReference>
 	<ProjectReference Include="..\YourSoundCompany.Templates\YourSoundCompany.Templates.csproj" />
   </ItemGroup>
 

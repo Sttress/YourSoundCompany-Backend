@@ -11,11 +11,12 @@ namespace YourSoundCompnay.Business
 {
     public interface IUserService
     {
-        Task<BaseResponse<UserResponseModel>> CreateUpdate(UserCreateModel model);
+        Task<BaseResponse<UserResponseModel>> Create(UserCreateModel model);
+        Task<BaseResponse<UserResponseModel>> Update(UserCreateModel model);
         Task<BaseResponse<UserResponseModel>> GetById(long? id);
         Task<bool> VerifyUserById(long id);
         Task<UserResponseModel?> GetCurrentUser();
         Task<BaseResponse<UserResponseModel>> VerifyEmailCode(UserVerificationEmail model);
-        Task<UserModel> GetByEmail(string email);
+        Task<List<UserModel>> GetByEmail(string email);
     }
 }

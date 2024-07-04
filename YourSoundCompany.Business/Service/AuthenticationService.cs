@@ -10,6 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using YourSoundCompany.Business.Model.Authentication;
 using System.Security.Cryptography;
 using YourSoundCompany.CacheService.Service;
+using YourSoundCompany.Business;
 
 namespace YourSoundCompnay.Business.Service
 {
@@ -19,19 +20,22 @@ namespace YourSoundCompnay.Business.Service
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
         private readonly ICacheService _cacheService;
+        private readonly IUtilsService _utilsService;
 
         public AuthenticationService
             (
                 IMapper mapper,
                 IConfiguration configuration,
                 IUserService userService,
-                ICacheService cacheService
+                ICacheService cacheService,
+                IUtilsService utilsService
             )
         {
             _mapper = mapper;
             _configuration = configuration;
             _userService = userService;
             _cacheService = cacheService;
+            _utilsService = utilsService;
         }
 
         private string _Key_RefreshToken(string refreshToken) => $"key_token_{refreshToken}";
@@ -49,7 +53,9 @@ namespace YourSoundCompnay.Business.Service
                     return result;
                 }
 
-                var user = await _userService.GetByEmail(model.Email);
+                var usersByEmail = await _userService.GetByEmail(model.Email);
+
+                var user = usersByEmail.Where(e => e.Active).FirstOrDefault();
 
                 if (user is null)
                 {
@@ -89,17 +95,9 @@ namespace YourSoundCompnay.Business.Service
             var result = new AuthModel();
 
             result.Token = GenerateToken(user);
-            result.RefreshToken = GenereteRefreshToken();
+            result.RefreshToken = _utilsService.GenerateRandomString();
             await SaveRefreshToken(result.RefreshToken);
             return result;
-        }
-
-        private string GenereteRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
         }
         private async Task RemoveRefreshTokenInCache(string refreshToken)
         {
@@ -159,10 +157,17 @@ namespace YourSoundCompnay.Business.Service
                     return result;
                 }
 
-                var user = await _userService.GetByEmail(email);
+                var usersByEmail = await _userService.GetByEmail(email);
+
+                var user = usersByEmail.Where(e => e.Active is true).FirstOrDefault();
+
+                if(user is null)
+                {
+                    result.Message.Add("Usuário não pode ser encontrado");
+                }
 
                 var newJwtToken = GenerateToken(user, principal.Claims);
-                var newRefreshToken = GenereteRefreshToken();
+                var newRefreshToken = _utilsService.GenerateRandomString();
                 await SaveRefreshToken(newRefreshToken);
 
                 result.Data = new UserLoginResponseModel() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseModel>(user) };

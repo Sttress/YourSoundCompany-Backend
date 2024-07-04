@@ -52,8 +52,12 @@ namespace YourSoundCompnay.Business.Service
 
         private string _Key_EmailCode(string email) => $"VerificationCode_{email}";
 
+        public Task<BaseResponse<UserResponseModel>> Update(UserCreateModel model)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task<BaseResponse<UserResponseModel>> CreateUpdate(UserCreateModel model)
+        public async Task<BaseResponse<UserResponseModel>> Create(UserCreateModel model)
         {
             try
             {
@@ -79,12 +83,13 @@ namespace YourSoundCompnay.Business.Service
                     return result;
                 }
 
-                entity = model.Id > 0 ? await _userRepository.GetUserById(model.Id) : null;
+                entity = model.Id > 0 ? await _userRepository.GetById(model.Id) : null;
 
                 if (entity != null)
                 {
                     entity.Name = model.Name;
                     entity.Email = model.Email;
+                    await _userRepository.Update(entity);
                 }
                 else
                 {
@@ -98,7 +103,7 @@ namespace YourSoundCompnay.Business.Service
 
                     await SendEmailVerification(model.Email, model.Name);
 
-                    entity = (await _userRepository.GetDbSetUser().AddAsync(entity)).Entity;
+                    entity = await _userRepository.Create(entity);
 
                 }
 
@@ -208,7 +213,7 @@ namespace YourSoundCompnay.Business.Service
             {
                 var result = new BaseResponse<UserResponseModel>();
 
-                var user = await _userRepository.GetUserById(id);
+                var user = await _userRepository.GetById(id);
                 if (user == null)
                 {
                     result.Message.Add("Usuário não existe");
@@ -226,9 +231,9 @@ namespace YourSoundCompnay.Business.Service
             }
         }
 
-        public async Task<UserModel> GetByEmail(string email)
+        public async Task<List<UserModel>> GetByEmail(string email)
         {
-            return _mapper.Map<UserModel>((await _userRepository.GetUserByEmail(email)).FirstOrDefault());
+            return _mapper.Map<List<UserModel>>(await _userRepository.GetUserByEmail(email));
         }
 
         public async Task<bool> VerifyUserById(long id)
@@ -236,7 +241,7 @@ namespace YourSoundCompnay.Business.Service
             try
             {
 
-                var user = await _userRepository.GetUserById(id);
+                var user = await _userRepository.GetById(id);
                 if (user == null)
                 {
                     return false;
@@ -251,5 +256,6 @@ namespace YourSoundCompnay.Business.Service
                 throw new Exception(ex.Message);
             }
         }
+
     }
 }

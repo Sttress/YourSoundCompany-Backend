@@ -17,11 +17,17 @@ namespace YourSoundCompnay.Api.Controllers
             _userService = userService;
         }
 
-        [HttpPost("CreateUpdate")]
+        [HttpPost("Create")]
         [AllowAnonymous]
-        public async Task<BaseResponse<UserResponseModel>> CreateUpdate([FromBody] UserCreateModel model)
+        public async Task<BaseResponse<UserResponseModel>> Create([FromBody] UserCreateModel model)
         {
-            return await _userService.CreateUpdate(model);
+            return await _userService.Create(model);
+        }
+
+        [HttpPost("Update")]
+        public async Task<BaseResponse<UserResponseModel>> Update([FromBody] UserCreateModel model)
+        {
+            return await _userService.Update(model);
         }
 
         [HttpGet("")]
