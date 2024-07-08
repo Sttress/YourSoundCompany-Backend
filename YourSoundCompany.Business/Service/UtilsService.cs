@@ -9,6 +9,8 @@ namespace YourSoundCompany.Business.Service
 {
     public class UtilsService : IUtilsService
     {
+        public UtilsService() { }
+
         public string GenerateRandomString()
         {
             var randomNumber = new byte[32];
@@ -16,5 +18,14 @@ namespace YourSoundCompany.Business.Service
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
         }
+
+        public int CreateRandomCodeInt()
+        {
+            var random = new Random();
+            var code = random.Next(100000, 999999);
+
+            return code;
+        }
     }
+
 }

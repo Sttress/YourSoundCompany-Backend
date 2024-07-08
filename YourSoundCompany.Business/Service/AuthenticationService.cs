@@ -11,6 +11,7 @@ using YourSoundCompany.Business.Model.Authentication;
 using System.Security.Cryptography;
 using YourSoundCompany.CacheService.Service;
 using YourSoundCompany.Business;
+using YourSoundCompany.Business.Model.User.DTO;
 
 namespace YourSoundCompnay.Business.Service
 {
@@ -79,7 +80,7 @@ namespace YourSoundCompnay.Business.Service
                 var userModel = _mapper.Map<UserModel>(user);
                 var auth = await GetAuth(user);
 
-                result.Data = new UserLoginResponseModel() { Token = auth.Token,RefreshToken = auth.RefreshToken ,user = _mapper.Map<UserResponseModel>(user) };
+                result.Data = new UserLoginResponseModel() { Token = auth.Token,RefreshToken = auth.RefreshToken ,user = _mapper.Map<UserResponseDTO>(user) };
 
 
                 return result;
@@ -170,7 +171,7 @@ namespace YourSoundCompnay.Business.Service
                 var newRefreshToken = _utilsService.GenerateRandomString();
                 await SaveRefreshToken(newRefreshToken);
 
-                result.Data = new UserLoginResponseModel() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseModel>(user) };
+                result.Data = new UserLoginResponseModel() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseDTO>(user) };
                 return result;
             }
             catch (Exception ex)

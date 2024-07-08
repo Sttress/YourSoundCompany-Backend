@@ -13,13 +13,13 @@ namespace YourSoundCompany.EmailService.Service
         {
             _configuration = configuration;
         }
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(List<string> email, string subject, string message)
         {
             Execute(email, subject, message).Wait();
             return Task.FromResult(0);
         }
 
-        private async Task Execute(string email, string subject, string message)
+        private async Task Execute(List<string> email, string subject, string message)
         {
             try
             {
@@ -28,7 +28,12 @@ namespace YourSoundCompany.EmailService.Service
                 {
                     From = new MailAddress(_configuration["EmailSettings:Email"])
                 };
-                mail.To.Add(new MailAddress(email));
+                
+                foreach(var item in email) 
+                {
+                    mail.To.Add(new MailAddress(item));
+                }
+
                 mail.Subject = subject;
                 mail.Body = message;
                 mail.IsBodyHtml = true;

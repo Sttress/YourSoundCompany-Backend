@@ -1,13 +1,13 @@
 ﻿
 using FluentValidation;
 using Microsoft.AspNetCore.Components.Forms;
-using YourSoundCompnay.Business.Model.User;
+using YourSoundCompany.Business.Model.User.DTO;
 using YourSoundCompnay.RelationalData;
 using YourSoundCompnay.RelationalData.Repository;
 
 namespace YourSoundCompnay.Business.Validation.User
 {
-    public class UserCreateValidator : AbstractValidator<UserCreateModel>
+    public class UserCreateValidator : AbstractValidator<UserCreateDTO>
     {
         private readonly IUserRepository _userRepository;
 

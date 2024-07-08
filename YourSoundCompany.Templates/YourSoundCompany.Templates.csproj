@@ -8,10 +8,13 @@
 
   <ItemGroup>
     <None Remove="Template\verify-email.html" />
+	<None Remove="Template\recovery-password.html" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Template\Email\verify-email.html" />
+	<EmbeddedResource Include="Template\Email\recovery-password.html" />
+
   </ItemGroup>
 
   <ItemGroup>

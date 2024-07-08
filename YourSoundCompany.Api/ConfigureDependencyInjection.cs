@@ -43,6 +43,7 @@ namespace YourSoundCompnay.Api
             services.AddScoped<ISpotifyCacheService, SpotifyCacheService>();
             services.AddScoped<ISpotifyAuthService, SpotifyAuthService>();
             services.AddScoped<ITemplateEmailService, TemplateEmailService>();
+            services.AddScoped<ISendEmailService,SendEmailService>();
 
             services.AddTransient<IEmailService, EmailService>();
 

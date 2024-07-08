@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YourSoundCompany.Business.Model.User
+namespace YourSoundCompany.Business.Model.User.DTO
 {
-    public class UserVerificationEmail
+    public class UserVerificationEmailDTO
     {
-        public string Email { get; set; }
+        public string? Email { get; set; }
         public int? Code { get; set; }
     }
 }

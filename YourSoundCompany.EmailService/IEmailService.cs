@@ -8,6 +8,6 @@ namespace YourSoundCompany.EmailService
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string email, string subject, string message);
+        Task SendEmailAsync(List<string> email, string subject, string message);
     }
 }

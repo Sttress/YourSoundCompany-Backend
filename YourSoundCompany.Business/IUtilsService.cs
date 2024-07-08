@@ -9,5 +9,6 @@ namespace YourSoundCompany.Business
     public interface IUtilsService
     {
         string GenerateRandomString();
+        int CreateRandomCodeInt();
     }
 }

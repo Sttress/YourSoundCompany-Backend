@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YourSoundCompnay.Business.Model.User
+namespace YourSoundCompany.Business.Model.User.DTO
 {
-    public class UserResponseModel
+    public class UserResponseDTO
     {
         public int Id { get; set; }
         public string? Name { get; set; }
