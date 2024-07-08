@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business.Model;
 using Microsoft.AspNetCore.Authorization;
 using YourSoundCompnay.Business;
-using YourSoundCompany.Business.Model.Authentication;
+using YourSoundCompany.Business.Model.Authentication.DTO;
 
 namespace YourSoundCompnay.Api.Controllers
 {
@@ -18,13 +17,13 @@ namespace YourSoundCompnay.Api.Controllers
 
         [HttpPost("Login")]
         [AllowAnonymous]
-        public async Task<BaseResponse<UserLoginResponseModel>> Login([FromBody] UserLoginModel model)
+        public async Task<BaseResponse<AuthLoginResponseDTO>> Login([FromBody] AuthLoginDTO model)
         {
             return await _authenticationService.Login(model);
         }
 
         [HttpPost("RefreshToken")]
-        public async Task<BaseResponse<UserLoginResponseModel>> RefreshToken([FromBody] AuthModel model)
+        public async Task<BaseResponse<AuthLoginResponseDTO>> RefreshToken([FromBody] AuthDTO model)
 
         {
             return await _authenticationService.RefreshToken(model);

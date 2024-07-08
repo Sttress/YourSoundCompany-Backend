@@ -19,6 +19,7 @@ using YourSoundCompany.RelationalData;
 using YourSoundCompany.RelationalData.Repository;
 using YourSoundCompany.IntegrationSpotify;
 using YourSoundCompany.IntegrationSpotify.Service;
+using YourSoundCompany.Business.Validation.User;
 
 namespace YourSoundCompnay.Api
 {
@@ -59,7 +60,7 @@ namespace YourSoundCompnay.Api
         {
             services.AddTransient<UserCreateValidator>();
             services.AddTransient<UserUpdateValidator>();
-
+            services.AddTransient<UserRecoveryPasswordValidator>();
             return services;
         }
 

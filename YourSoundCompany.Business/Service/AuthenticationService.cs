@@ -7,11 +7,11 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.IdentityModel.Tokens.Jwt;
-using YourSoundCompany.Business.Model.Authentication;
 using System.Security.Cryptography;
 using YourSoundCompany.CacheService.Service;
 using YourSoundCompany.Business;
 using YourSoundCompany.Business.Model.User.DTO;
+using YourSoundCompany.Business.Model.Authentication.DTO;
 
 namespace YourSoundCompnay.Business.Service
 {
@@ -41,11 +41,11 @@ namespace YourSoundCompnay.Business.Service
 
         private string _Key_RefreshToken(string refreshToken) => $"key_token_{refreshToken}";
 
-        public async Task<BaseResponse<UserLoginResponseModel>> Login(UserLoginModel model)
+        public async Task<BaseResponse<AuthLoginResponseDTO>> Login(AuthLoginDTO model)
         {
             try
             {
-                var result = new BaseResponse<UserLoginResponseModel>();
+                var result = new BaseResponse<AuthLoginResponseDTO>();
                 result.Message = new List<string>();
 
                 if (string.IsNullOrEmpty(model.Email))
@@ -80,7 +80,7 @@ namespace YourSoundCompnay.Business.Service
                 var userModel = _mapper.Map<UserModel>(user);
                 var auth = await GetAuth(user);
 
-                result.Data = new UserLoginResponseModel() { Token = auth.Token,RefreshToken = auth.RefreshToken ,user = _mapper.Map<UserResponseDTO>(user) };
+                result.Data = new AuthLoginResponseDTO() { Token = auth.Token,RefreshToken = auth.RefreshToken ,user = _mapper.Map<UserResponseDTO>(user) };
 
 
                 return result;
@@ -91,9 +91,9 @@ namespace YourSoundCompnay.Business.Service
             }
         }
 
-        private async Task<AuthModel> GetAuth(UserModel user)
+        private async Task<AuthDTO> GetAuth(UserModel user)
         {
-            var result = new AuthModel();
+            var result = new AuthDTO();
 
             result.Token = GenerateToken(user);
             result.RefreshToken = _utilsService.GenerateRandomString();
@@ -130,22 +130,16 @@ namespace YourSoundCompnay.Business.Service
             return pricipal;
         }
 
-        public async Task<BaseResponse<UserLoginResponseModel>> RefreshToken(AuthModel model)
+        public async Task<BaseResponse<AuthLoginResponseDTO>> RefreshToken(AuthDTO model)
         {
 
             try
             {
-                var result = new BaseResponse<UserLoginResponseModel>();
+                var result = new BaseResponse<AuthLoginResponseDTO>();
 
                 var principal = GetPrincipalFromExpiredToken(model.Token);
                 var saveRefreshToken = await GetRefreshToken(model.RefreshToken);
                 if (saveRefreshToken == null || saveRefreshToken != model.RefreshToken)
-                {
-                    result.Message.Add("RefreshToken invalido!");
-                    return result;
-                }
-
-                if (!long.TryParse(principal.Claims.FirstOrDefault(x => x.Type == ClaimTypes.SerialNumber)?.Value, out long tenantId))
                 {
                     result.Message.Add("RefreshToken invalido!");
                     return result;
@@ -171,7 +165,7 @@ namespace YourSoundCompnay.Business.Service
                 var newRefreshToken = _utilsService.GenerateRandomString();
                 await SaveRefreshToken(newRefreshToken);
 
-                result.Data = new UserLoginResponseModel() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseDTO>(user) };
+                result.Data = new AuthLoginResponseDTO() { Token = newJwtToken, RefreshToken = newRefreshToken, user = _mapper.Map<UserResponseDTO>(user) };
                 return result;
             }
             catch (Exception ex)

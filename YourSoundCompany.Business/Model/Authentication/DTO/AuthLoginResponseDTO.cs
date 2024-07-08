@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using YourSoundCompany.Business.Model.User.DTO;
 
-namespace YourSoundCompnay.Business.Model.User
+namespace YourSoundCompany.Business.Model.Authentication.DTO
 {
-    public class UserLoginResponseModel
+    public class AuthLoginResponseDTO
     {
         public string? Token { get; set; }
         public string? RefreshToken { get; set; }

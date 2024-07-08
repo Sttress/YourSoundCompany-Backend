@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace YourSoundCompnay.Business.Model.User
+namespace YourSoundCompany.Business.Model.Authentication.DTO
 {
-    public class UserLoginModel
+    public class AuthLoginDTO
     {
         public string? Email { get; set; }
         public string? Password { get; set; }
