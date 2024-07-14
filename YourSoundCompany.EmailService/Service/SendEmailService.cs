@@ -6,10 +6,10 @@ using System.Net.Mail;
 
 namespace YourSoundCompany.EmailService.Service
 {
-    public class EmailService : IEmailService
+    public class SendEmailService : ISendEmailService
     {
         private readonly IConfiguration _configuration;
-        public EmailService(IConfiguration configuration) 
+        public SendEmailService(IConfiguration configuration) 
         {
             _configuration = configuration;
         }

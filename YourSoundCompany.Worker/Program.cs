@@ -1,32 +1,41 @@
 using Hangfire;
-using Hangfire.PostgreSql;
-using Microsoft.Extensions.Configuration;
-using YourSoundCompany.Worker;
+using Hangfire.MemoryStorage;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using YourSoundCompany.Common;
 using YourSoundCompany.Worker.Jobs;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+builder.Configuration.AddJsonFile($"appsettings.json", false, false);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false);
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+        opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        opt.JsonSerializerOptions.AllowTrailingCommas = true;
+    }); 
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-ConfigureDependencyInjection.ConfigureDI(builder.Services, builder.Configuration);
-
-string connectionString = builder.Configuration.GetConnectionString("HangFire");
 
 builder.Services.AddHangfire(config =>
 {
     config.SetDataCompatibilityLevel(CompatibilityLevel.Version_180);
     config.UseSimpleAssemblyNameTypeSerializer();
     config.UseRecommendedSerializerSettings();
-    config.UsePostgreSqlStorage(connectionString);
+    config.UseMemoryStorage();
 
 });
 
 builder.Services.AddHangfireServer();
+
+ConfigureDependencyInjection.ConfigureDI(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
@@ -40,8 +49,6 @@ if (app.Environment.IsDevelopment())
 app.UseHangfireDashboard("/dashboard");
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 

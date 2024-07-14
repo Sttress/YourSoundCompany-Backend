@@ -5,16 +5,16 @@ using YourSoundCompany.Templates.Enum;
 
 namespace YourSoundCompany.Business.Service
 {
-    public class SendEmailService : ISendEmailService
+    public class EmailService : IEmailService
     {
-        private readonly IEmailService _emailService;
+        private readonly ISendEmailService _emailService;
         private readonly ITemplateEmailService _templateEmailService;
         private readonly IConfiguration _configuration;
 
 
-        public SendEmailService
+        public EmailService
             (
-                IEmailService emailService,
+                ISendEmailService emailService,
                 ITemplateEmailService templateEmailService,
                 IConfiguration configuration
             ) 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YourSoundCompany.EmailService
 {
-    public interface IEmailService
+    public interface ISendEmailService
     {
         Task SendEmailAsync(List<string> email, string subject, string message);
     }

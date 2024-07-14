@@ -1,18 +1,30 @@
 
-using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using YourSoundCompany.Common;
 using YourSoundCompnay.Api;
 using YourSoundCompnay.Api.Filter;
 using YourSoundCompnay.Business.Model.Base;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Configuration.SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location));
+builder.Configuration.AddJsonFile($"appsettings.json", false, false);
+builder.Configuration.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, false);
 
 builder.Services.AddControllers(opt =>
 {
     opt.Filters.Add<SessionFilter>();
-});
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+})
+    .AddJsonOptions(opt =>
+{
+    opt.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    opt.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    opt.JsonSerializerOptions.AllowTrailingCommas = true;
+    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+}); 
 builder.Services.AddEndpointsApiExplorer();
 
 var descriptor = builder.Configuration.GetSection("JWTDescriptor").Get<JwtConfigureModel>();
@@ -31,6 +43,11 @@ builder.Services.AddCors(opt =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
+
 SwaggerConfiguration.ConfigureSwaggerService(builder.Services);
 
 ConfigureDependencyInjection.ConfigureDI(builder.Services, builder.Configuration);
@@ -40,7 +57,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

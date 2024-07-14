@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace YourSoundCompany.Business
 {
-    public interface ISendEmailService
+    public interface IEmailService
     {
         Task VerificationEmail(string email, string name, int codeVerify);
         Task RecoveryPasswordEmail(string email, string name, string CodeToUrl);

@@ -30,7 +30,7 @@ namespace YourSoundCompnay.Business.Service
         private readonly UserRecoveryPasswordValidator _userRecoveryPasswordValidator;
         private readonly ISessionService _sessionService;
         private readonly ICacheService _cacheService;
-        private readonly ISendEmailService _sendEmailService;
+        private readonly YourSoundCompany.Business.IEmailService _sendEmailService;
         private readonly IUtilsService _utilsService;
 
         public UserService
@@ -42,7 +42,7 @@ namespace YourSoundCompnay.Business.Service
                 UserRecoveryPasswordValidator userRecoveryPasswordValidator,
                 ISessionService sessionService,
                 ICacheService cacheService,
-                ISendEmailService sendEmailService,
+                YourSoundCompany.Business.IEmailService sendEmailService,
                 IUtilsService utilsService
             )
         {

@@ -22,7 +22,7 @@ namespace YourSoundCompnay.RelationalData.Repository
 
         public async Task<List<UserEntity>> GetUserListInactive()
         {
-            return await _contextDB.User.Where(e => e.Active).ToListAsync();
+            return await _contextDB.User.Where(e => !e.Active).ToListAsync();
         }
     }
 }

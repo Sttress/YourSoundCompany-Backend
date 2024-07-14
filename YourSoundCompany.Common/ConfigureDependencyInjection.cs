@@ -1,5 +1,4 @@
-﻿
-using YourSoundCompnay.RelationalData;
+﻿using YourSoundCompnay.RelationalData;
 using YourSoundCompnay.RelationalData.Repository;
 using Microsoft.EntityFrameworkCore;
 using YourSoundCompnay.Business.Map;
@@ -10,18 +9,22 @@ using YourSoundCompnay.Business.Service;
 using YourSoundCompnay.Business;
 using YourSoundCompany.Business;
 using YourSoundCompany.Business.Service;
-using YourSoundCompany.EmailService;
-using YourSoundCompany.EmailService.Service;
 using YourSoundCompany.Templates;
 using YourSoundCompany.Templates.Service;
-using YourSoundCompany.CacheService.Service;
 using YourSoundCompany.RelationalData;
 using YourSoundCompany.RelationalData.Repository;
 using YourSoundCompany.IntegrationSpotify;
 using YourSoundCompany.IntegrationSpotify.Service;
 using YourSoundCompany.Business.Validation.User;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using YourSoundCompany.EmailService;
+using YourSoundCompany.EmailService.Service;
+using YourSoundCompany.CacheService.Service;
+using Sync.Services;
+using Sync;
 
-namespace YourSoundCompnay.Api
+namespace YourSoundCompany.Common
 {
     public static class ConfigureDependencyInjection
     {
@@ -36,7 +39,7 @@ namespace YourSoundCompnay.Api
             services.AddAutoMapper(typeof(UserMap).Assembly);
             services.AddHttpClient();
 
-            services.AddScoped<IUtilsService,UtilsService>();
+            services.AddScoped<IUtilsService, UtilsService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ISessionService, SessionService>();
@@ -44,11 +47,14 @@ namespace YourSoundCompnay.Api
             services.AddScoped<ISpotifyCacheService, SpotifyCacheService>();
             services.AddScoped<ISpotifyAuthService, SpotifyAuthService>();
             services.AddScoped<ITemplateEmailService, TemplateEmailService>();
-            services.AddScoped<ISendEmailService,SendEmailService>();
+            services.AddScoped<IEmailService, Business.Service.EmailService>();
 
-            services.AddTransient<IEmailService, EmailService>();
+            services.AddScoped<IUserSyncService, UserSyncService>();
 
-            services.AddSingleton<ICacheService, CacheService>();
+
+            services.AddTransient<ISendEmailService, SendEmailService>();
+
+            services.AddSingleton<ICacheService,CacheService.Service.CacheService>();
 
 
             return services;

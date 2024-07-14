@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using YourSoundCompnay.RelationalData;
 
 namespace Sync.Services
@@ -19,7 +15,17 @@ namespace Sync.Services
         {
             try 
             {
-                var usersInactive = await _userRepository.GetUserListInactive();
+                //var usersInactive = await _userRepository.GetUserListInactive();
+
+                //foreach(var user in usersInactive)
+                //{
+                //    var usersByEmail = await _userRepository.GetUserByEmail(user.Email);
+
+                //    if (usersByEmail.Any(e => e.))
+                //    {
+                //        await _userRepository.Delete(user.Id);
+                //    }
+                //}
             }
             catch(Exception ex) 
             {

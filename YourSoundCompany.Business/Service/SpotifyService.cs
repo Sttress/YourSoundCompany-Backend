@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
-using System.Text;
 using YourSoundCompany.Business.Model.Spotify;
 using YourSoundCompany.CacheService.Service;
 using YourSoundCompany.IntegrationSpotify;

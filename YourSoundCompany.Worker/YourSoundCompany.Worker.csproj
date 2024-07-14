@@ -8,12 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Hangfire.AspNetCore" Version="1.8.14" />
-    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.9" />
+    <PackageReference Include="Hangfire.MemoryStorage" Version="1.8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Sync\YourSoundCompany.Sync.csproj" />
+    <ProjectReference Include="..\YourSoundCompany.Common\YourSoundCompany.Common.csproj" />
     <ProjectReference Include="..\YourSoundCompany.RelationalData\YourSoundCompany.RelationalData.csproj" />
   </ItemGroup>
 
