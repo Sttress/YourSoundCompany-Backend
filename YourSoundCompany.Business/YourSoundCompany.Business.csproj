@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\YourCompany.SpotifyService\YourCompany.SpotifyService.csproj" />
     <ProjectReference Include="..\YourSoundCompany.CacheService\YourSoundCompany.CacheService.csproj" />
     <ProjectReference Include="..\YourSoundCompany.EmailService\YourSoundCompany.EmailService.csproj" />
     <ProjectReference Include="..\YourSoundCompany.IntegrationSpotify\YourSoundCompany.SpotifyService.csproj" />

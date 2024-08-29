@@ -1,15 +1,9 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using YourSoundCompany.Business;
 using YourSoundCompany.Business.Model.User.DTO;
 using YourSoundCompany.Business.Validation.User;
 using YourSoundCompany.CacheService.Service;
-using YourSoundCompany.EmailService;
-using YourSoundCompany.Templates;
-using YourSoundCompany.Templates.Enum;
 using YourSoundCompnay.Business.Model;
 using YourSoundCompnay.Business.Model.User;
 using YourSoundCompnay.Business.Validation.User;
@@ -30,7 +24,7 @@ namespace YourSoundCompnay.Business.Service
         private readonly UserRecoveryPasswordValidator _userRecoveryPasswordValidator;
         private readonly ISessionService _sessionService;
         private readonly ICacheService _cacheService;
-        private readonly YourSoundCompany.Business.IEmailService _sendEmailService;
+        private readonly IEmailService _sendEmailService;
         private readonly IUtilsService _utilsService;
 
         public UserService
@@ -42,7 +36,7 @@ namespace YourSoundCompnay.Business.Service
                 UserRecoveryPasswordValidator userRecoveryPasswordValidator,
                 ISessionService sessionService,
                 ICacheService cacheService,
-                YourSoundCompany.Business.IEmailService sendEmailService,
+                IEmailService sendEmailService,
                 IUtilsService utilsService
             )
         {
@@ -152,6 +146,7 @@ namespace YourSoundCompnay.Business.Service
                 throw new Exception(ex.Message);
             }
         }
+        
 
 
         public async Task<BaseResponse<UserResponseDTO>> VerifyEmailCode(UserVerificationEmailDTO model)

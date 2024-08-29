@@ -1,94 +1,89 @@
-﻿using Microsoft.Extensions.Configuration;
-using YourSoundCompany.Business.Model.Spotify;
+﻿using YourCompany.SpotifyService;
+using YourSoundCompany.Business.Model.User.DTO;
 using YourSoundCompany.CacheService.Service;
-using YourSoundCompany.IntegrationSpotify;
-using YourSoundCompany.IntegrationSpotify.Model.User;
-using YourSoundCompnay.Business;
 using YourSoundCompnay.Business.Model;
+using YourSoundCompnay.SesseionService;
 
 
 namespace YourSoundCompany.Business.Service
 {
     public class SpotifyService : ISpotifyService
     {
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
-        private readonly ICacheService _cacheService;
-        private readonly IUserService _userService;
         private readonly ISpotifyAuthService _spotifyAuthService;
+        private readonly ICacheService _cacheService;
+        private readonly ISessionService _sessionService;
+        private readonly ISpotifyUserService _spotifyUserService;
+
+        private string _Key_GetDashBoard(string email) => $"GetDashBoard{email}";
 
 
-        public SpotifyService(
-            HttpClient httpClient,
-            IConfiguration configuration,
-            ICacheService cacheService,
-            IUserService userService,
-            ISpotifyAuthService spotifyAuthService)
+        public SpotifyService
+            (
+                ISpotifyAuthService spotifyAuthService,
+                ICacheService cacheService,
+                ISessionService sessionService,
+                ISpotifyUserService spotifyUserService
+            )
         {
-            _httpClient = httpClient;
-            _configuration = configuration;
-            _cacheService = cacheService;
-            _userService = userService;
             _spotifyAuthService = spotifyAuthService;
+            _cacheService = cacheService;
+            _sessionService = sessionService;
+            _spotifyUserService = spotifyUserService;
+
         }
 
-        public async Task GetAuthorization(string email, string code)
+        public async Task GetToken(string email, string code)
         {
-             await _spotifyAuthService.GetAuthorization(email,code);
+             await _spotifyAuthService.GetToken(email,code);
         }
 
-        public async Task<string> GetCodeUrl(string email)
+        public async Task<string> GetUrlAuthorization(string email)
         {
-            return await _spotifyAuthService.GetCodeUrl(email);
+            return await _spotifyAuthService.GetUrlAuthorization(email);
         }
 
-        public async Task<BaseResponse<DashBoardSpotifyModel>> GetDashBoard(GetDashBoardSpotifyModel model)
+
+
+        public async Task<BaseResponse<UserDashBoardDTO>> GetDashBoardCurrent()
         {
             try
             {
-                var result = new BaseResponse<DashBoardSpotifyModel>();
-                var allArtists = new List<Artist>();
-                var user = await _userService.GetCurrentUser();
+                var result = new BaseResponse<UserDashBoardDTO>();
+                var email = _sessionService.Email;
+                var key = _Key_GetDashBoard(email);
 
-                int limit = 50;
-                int offset = 0;
-
-                if (user is not object)
+                var dashBoard = await _cacheService.Get<UserDashBoardDTO>(key);
+                if(dashBoard is not null)
                 {
-                    result.Message.Add("Usuario logado não pode ser encontrato");
+                    result.Data = dashBoard;
                     return result;
                 }
 
-                //var token = await GetTokenSpotify(user.Email);
-
-                //if (string.IsNullOrEmpty(token))
-                //{
-                //    result.Message.Add("Usuario logado não pode ser encontrato");
-                //    return result;
-                //}
-
-
-                var timeRangeTerm = GetTimeRangeTerm(model.TimeRange);
-                         
-
+                dashBoard = await GetDashBoard();
+                result.Data = dashBoard;
                 return result;
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Fail in get dashboard", ex);
+                throw new Exception(ex.Message);
             }
         }
 
-        private string GetTimeRangeTerm(string timeRange)
+        private async Task<UserDashBoardDTO> GetDashBoard()
         {
-            switch (timeRange)
+
+            try
             {
-                case "short": return "short_term";
-                case "medium":return "medium_term";
-                case "long": return "long_term";
-                default: return "short_term";
+                var artistList = await _spotifyUserService.GetTopArtistUserItems();
+                var trackList = await _spotifyUserService.GetTopTracksUserItems();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
+
     }
 }

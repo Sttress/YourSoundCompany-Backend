@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using YourSoundCompany.Business;
-using YourSoundCompany.Business.Model.Spotify;
-using YourSoundCompnay.Business.Model;
 
 namespace YourSoundCompnay.Api.Controllers
 {
@@ -14,22 +11,23 @@ namespace YourSoundCompnay.Api.Controllers
             _spotifyService = spotifyService;
         }
 
-        [HttpGet("GetUrlForCode")]
-        public async Task<string> GetUrlForCode([FromQuery] string email)
+        [HttpGet("GetUrlAuthorization")]
+        public async Task<string> GetUrlAuthorization([FromQuery] string email)
         {
-            return await _spotifyService.GetCodeUrl(email);
+            return await _spotifyService.GetUrlAuthorization(email);
         }
 
-        [HttpPost(("GetAuthorization"))]
+        [HttpPost(("GetToken"))]
         public async Task<OkResult> GetAuthorization([FromQuery] string code, string email)
         {
-            await _spotifyService.GetAuthorization(email,code);
+            await _spotifyService.GetToken(email,code);
             return Ok();
         }
-        [HttpPost("GetDashBoard")]
-        public async Task<BaseResponse<DashBoardSpotifyModel>> GetDashBoard([FromBody] GetDashBoardSpotifyModel model)
-        {
-            return await _spotifyService.GetDashBoard(model);
-        }
+
+        //[HttpPost("GetDashBoard")]
+        //public async Task<BaseResponse<DashBoardSpotifyModel>> GetDashBoard([FromBody] GetDashBoardSpotifyModel model)
+        //{
+        //    return await _spotifyService.GetDashBoard(model);
+        //}
     }
 }

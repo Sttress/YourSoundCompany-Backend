@@ -13,8 +13,6 @@ using YourSoundCompany.Templates;
 using YourSoundCompany.Templates.Service;
 using YourSoundCompany.RelationalData;
 using YourSoundCompany.RelationalData.Repository;
-using YourSoundCompany.IntegrationSpotify;
-using YourSoundCompany.IntegrationSpotify.Service;
 using YourSoundCompany.Business.Validation.User;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +21,9 @@ using YourSoundCompany.EmailService.Service;
 using YourSoundCompany.CacheService.Service;
 using Sync.Services;
 using Sync;
+using System.Net.Http;
+using YourCompany.SpotifyService;
+using YourCompany.SpotifyService.Service;
 
 namespace YourSoundCompany.Common
 {
@@ -44,7 +45,6 @@ namespace YourSoundCompany.Common
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ISessionService, SessionService>();
             services.AddScoped<ISpotifyService, SpotifyService>();
-            services.AddScoped<ISpotifyCacheService, SpotifyCacheService>();
             services.AddScoped<ISpotifyAuthService, SpotifyAuthService>();
             services.AddScoped<ITemplateEmailService, TemplateEmailService>();
             services.AddScoped<IEmailService, Business.Service.EmailService>();
@@ -55,6 +55,7 @@ namespace YourSoundCompany.Common
             services.AddTransient<ISendEmailService, SendEmailService>();
 
             services.AddSingleton<ICacheService,CacheService.Service.CacheService>();
+            services.AddSingleton<YourCompany.SpotifyService.IHttpClientFactory, HttpClientFactory>();
 
 
             return services;

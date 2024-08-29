@@ -31,6 +31,7 @@ namespace YourSoundCompnay.Api.Filter
             var claims = context.HttpContext.User.Claims.ToList();
 
             _sessionService.UserId = long.Parse(claims?.FirstOrDefault(e => e.Type == ClaimTypes.Sid)?.Value);
+            _sessionService.Email = claims?.FirstOrDefault(e => e.Type == ClaimTypes.Email)?.Value;
             await next();
 
         }

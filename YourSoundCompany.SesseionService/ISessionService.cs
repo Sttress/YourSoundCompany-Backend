@@ -11,6 +11,7 @@ namespace YourSoundCompnay.SesseionService
         long? UserId { get; set; }
         string SpotifyToken {  get; set; }
         string SpotifyRefreshToken { get; set; }
+        string Email { get; set; }
 
         void SetSessionData(string key, object data);
 
